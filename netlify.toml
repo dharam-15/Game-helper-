@@ -1,0 +1,43 @@
+# GAME HELPER — Netlify configuration
+# This is a static site: no build step, no bundler. The publish directory is
+# simply the folder this file lives in.
+
+[build]
+  publish = "."
+  functions = "netlify/functions"
+
+# Everything that is not a real file falls through to the single-page app.
+# (GAME HELPER uses hash routes, so this is mostly belt-and-braces.)
+
+[[redirects]]
+  from = "/api/ask"
+  to = "/.netlify/functions/ask"
+  status = 200
+
+[[redirects]]
+  from = "/api/vision"
+  to = "/.netlify/functions/vision"
+  status = 200
+
+# Optional: live game database. Add RAWG_API_KEY in the host dashboard, then set
+# API_CONFIG.future.gameDatabaseApi = "/api/games" in Game Helper.html.
+[[redirects]]
+  from = "/api/games/*"
+  to = "/.netlify/functions/gamedb/:splat"
+  status = 200
+
+[[redirects]]
+  from = "/*"
+  to = "/Game Helper.html"
+  status = 200
+
+# Optional caching. Change the hashed filenames if you ever split the files up.
+[[headers]]
+  for = "/Game Helper.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/netlify/functions/*"
+  [headers.values]
+    Cache-Control = "no-store"
